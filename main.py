@@ -101,7 +101,7 @@ sleep(0.5)
 #   update_all_argb(s)
 r = 255
 g = 0
-b = 50
+b = 60
 while False:
     r = random.randint(0, 150)
     g = random.randint(0, 150)
