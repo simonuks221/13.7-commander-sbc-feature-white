@@ -34,8 +34,8 @@ BOTTOM_BACK_0 = [21, 27, 27, 20, 26, 30, 30,
                  26, 24, 26, 23, 33, 39, 31, 35, 41, 41, 36, 36, 29]
 
 BOTTOM_FRONT_0 = [33, 18, 18, 21, 18, 30, 33, 29,
-                  30, 27, 20, 21, 21, 25, 30, 26, 36, 18, 18, 18, 27, 23, 21, 33, 31, 24, 24, 27, 28, 24, 22, 25, 25,
-                  18, 34, 21, 24, 25, 25, 18, 29, 22, 18]
+                  30, 27, 20, 21, 21, 25, 30, 26, 36, 18, 18, 18, 27, 23, 21, 33, 31, 24, 24, 27, 28, 24, 22, 25, 25, 18, 34, 21,
+                  24, 25, 25, 18, 29, 22, 18]
 
 SMALL_SIDE_0 = [50, 49, 43, 43, 46, 41, 38, 44, 38, 41]
 
@@ -48,12 +48,12 @@ FACE_0 = [23, 43, 49, 49, 47, 35, 14, 15,
 FACE_1 = [23, 43, 48, 49, 48, 32, 14, 15,
           22, 27, 23, 25, 17, 17, 20, 16, 12, 13, 12, 28, 28, 11, 11, 13, 35, 23]  # BOTTOM FRONT 0
 
-
 BIG_SIDE_0 = [50, 50, 42, 43, 49, 49,
               49, 48, 41, 38, 44, 37, 41, 42, 37, 35, 37, 41]
 
 BIG_SIDE_1 = [44, 43, 30, 23, 24, 39,
               49, 40, 42, 37, 42, 48, 41, 37, 41, 27, 19, 25, 19]
+
 
 # ledu skaiciai virsuje teorines reiksmes
 did = 49
@@ -68,23 +68,14 @@ BOTTOM_BACK_1 = [27, 26, 30, 30, 30, 24, 20,
                  21, 23, 26, 26, 20, 27, 18, 26, 21, 25, 24, 30, 33, 35, 35, 41, 42, 36, 36, 28]
 
 BOTTOM_FRONT_1 = [16, 25, 27, 29, 37, 27, 19,
-                  16, 38, 22,  32, 28, 26, 34, 18, 28, 21, 21, 8, 10, 18, 11, 8, 10, 14, 16, 9, 33, 31, 26, 32, 28, 28,
-                  24, 19, 18, 26, 21, 24, 21, 24, 25, 25, 18, 29, 22, 17]
+                  16, 38, 22,  32, 28, 26, 34, 18, 28, 21, 21, 8, 10, 18, 11, 8, 10, 14, 16, 9, 33, 31, 26, 32, 28, 28, 24, 19, 18, 26, 21, 24, 21, 24, 25, 25, 18, 29, 22, 17]
 
 allPixels = [BOTTOM_BACK_0, BOTTOM_BACK_1, BOTTOM_FRONT_0,
              BOTTOM_FRONT_1, SMALL_SIDE_0, SMALL_SIDE_1, FACE_0, FACE_1, TOP_0, TOP_1, BIG_SIDE_0, BIG_SIDE_1]
 
 jointai: SegmentJoint = {}
 
-
-tmp = len(BOTTOM_BACK_0) + len(BOTTOM_FRONT_0) + len(SMALL_SIDE_1) + len(BOTTOM_BACK_1) + len(BOTTOM_FRONT_1) + len(SMALL_SIDE_0) - 1
-EYE_R = [7 + tmp, 14 + tmp, 16 + tmp, 17 + tmp, 18 + tmp, 19 + tmp, 20 + tmp]
-tmp1 = tmp + len(FACE_0)
-EYE_L = [7 + tmp1, 14 + tmp1, 16 + tmp1, 17 + tmp1, 22 + tmp1, 23 + tmp1, 24 + tmp1]
-tmp2 = len(BOTTOM_BACK_0) + len(BOTTOM_BACK_1) + len(BOTTOM_FRONT_0)
-MOUTH = [18 + tmp2, 19 + tmp2, 20 + tmp2, 21 + tmp2, 22 + tmp2, 23 + tmp2, 24 + tmp2, 25 + tmp2, 26 + tmp2, 49 + tmp2, 50 + tmp2]
-
-s = Serial('COM4', 460800)
+s = Serial('COM6', 460800)
 s.timeout = 0.01
 
 animation_runtime_s = 5
@@ -95,7 +86,7 @@ animation_count = 10
 beat_threshold = 0.5
 
 use_rms = True
-#song = AudioFile('trenk.wav')
+# song = AudioFile('trenk.wav')
 # song.play()
 
 hue = 0
@@ -111,20 +102,6 @@ sleep(0.5)
 r = 255
 g = 0
 b = 50
-while True:
-    r = random.randint(0, 255)
-    g = random.randint(0, 255)
-    b = random.randint(0, 255)
-    for i in range(0, len(EYE_R)):
-        head_color_edge(s, EYE_R[i], r, g, b)
-        head_color_edge(s, EYE_L[i], r, g, b)
-
-    for i in range(0, len(MOUTH)):
-        head_draw_some(2, 0, s, 0, 0, 0)
-        head_color_edge(s, MOUTH[i], r, g, b)
-        update_all_argb(s)
-        #sleep(0.05)
-
 while False:
     r = random.randint(0, 150)
     g = random.randint(0, 150)
@@ -135,13 +112,13 @@ while False:
         head_draw_some(i, 0, s, r, g, b)
         update_all_argb(s)
         sleep(0.03)
-    #cube_color_edge(s, E.TOP_FRONT_FRONT, 255, 0, 0)
+    # cube_color_edge(s, E.TOP_FRONT_FRONT, 255, 0, 0)
 # cube_random_all_faces(s)
 # update_all_argb(s)
 r = 0
 g = 0
 b = 0
-while False:
+while True:
     # head_draw_some(6, 0, s, 255, 10, 10)
 
     for i in range(0, len(allEdges)):
@@ -163,8 +140,8 @@ while False:
     update_all_argb(s)
     sleep(0.5)
 
-#while True:
-    #sleep(1)
+while True:
+    sleep(1)
 
 try:
 
