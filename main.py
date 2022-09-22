@@ -78,8 +78,14 @@ allPixels = [BOTTOM_BACK_0, BOTTOM_BACK_1, BOTTOM_FRONT_0,
 
 jointai: SegmentJoint = []
 
+tmp = len(BOTTOM_BACK_0) + len(BOTTOM_FRONT_0) + len(SMALL_SIDE_1) + len(BOTTOM_BACK_1) + len(BOTTOM_FRONT_1) + len(SMALL_SIDE_0) - 1
+EYE_R = [7 + tmp, 14 + tmp, 16 + tmp, 17 + tmp, 18 + tmp, 19 + tmp, 20 + tmp]
+tmp1 = tmp + len(FACE_0)
+EYE_L = [7 + tmp1, 14 + tmp1, 16 + tmp1, 17 + tmp1, 22 + tmp1, 23 + tmp1, 24 + tmp1]
+tmp2 = len(BOTTOM_BACK_0) + len(BOTTOM_BACK_1) + len(BOTTOM_FRONT_0)
+MOUTH = [18 + tmp2, 19 + tmp2, 20 + tmp2, 21 + tmp2, 22 + tmp2, 23 + tmp2, 24 + tmp2, 25 + tmp2, 26 + tmp2, 49 + tmp2, 50 + tmp2]
 
-s = Serial('COM6', 460800)
+s = Serial('COM4', 460800)
 s.timeout = 0.01
 
 
@@ -94,6 +100,23 @@ sleep(0.5)
 r = 255
 g = 0
 b = 50
+while True:
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    for i in range(0, len(EYE_R)):
+        head_color_edge(s, EYE_R[i], r, g, b)
+        head_color_edge(s, EYE_L[i], r, g, b)
+
+    for i in range(0, len(MOUTH)):
+        head_draw_some(2, 0, s, 0, 0, 0)
+        head_color_edge(s, MOUTH[i], r, g, b)
+        update_all_argb(s)
+        #sleep(0.05)
+
+r = 255
+g = 0
+b = 60
 while False:
     r = random.randint(0, 150)
     g = random.randint(0, 150)
@@ -197,7 +220,7 @@ song = AudioFile('Armors - DOA.wav')
 song.play()
 
 hue = 0
-
+'''
 try:
 
     max_metric = 10
@@ -247,7 +270,7 @@ finally:
 
     # # cube_random_all_faces(s)
     # sleep(5)
-
+'''
 
 # song = AudioFile('Armors - DOA.wav')
 
