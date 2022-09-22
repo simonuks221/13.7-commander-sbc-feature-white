@@ -122,9 +122,6 @@ while True:
     # head_draw_some(6, 0, s, 255, 10, 10)
 
     for i in range(0, len(allEdges)):
-        # r = random.randint(0, 255)
-        # g = random.randint(0, 255)
-        # b = random.randint(0, 255)
 
         if i % 2 == 0:
             r = 255
@@ -132,12 +129,16 @@ while True:
         else:
             r = 0
             b = 255
+
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
         # head_draw_some(allEdges[i].strips[0][0], allEdges[i].strips[0][1], s, 255, 10, 10)
-        if (allEdges[i].strips[0][0] == E.SMALL_SIDE):
-            head_color_edge(s, i, r, g, b)
-    head_draw_all(s, 255, 10, 10)
+
+        head_color_edge(s, i, r, g, b)
+    #head_draw_all(s, 255, 10, 10)
     update_all_argb(s)
-    sleep(1)
+    sleep(0.5)
 
 while True:
     sleep(1)
