@@ -73,32 +73,21 @@ BOTTOM_FRONT_1 = [16, 25, 27, 29, 37, 27, 19,
 allPixels = [BOTTOM_BACK_0, BOTTOM_BACK_1, BOTTOM_FRONT_0,
              BOTTOM_FRONT_1, SMALL_SIDE_0, SMALL_SIDE_1, FACE_0, FACE_1, TOP_0, TOP_1, BIG_SIDE_0, BIG_SIDE_1]
 
-jointai: SegmentJoint = {}
+jointai: SegmentJoint = []
+
 
 s = Serial('COM6', 460800)
 s.timeout = 0.01
 
-animation_runtime_s = 5
-start_time = time()
-animation = 0
-animation_count = 10
-
-beat_threshold = 0.5
-
-use_rms = True
-# song = AudioFile('trenk.wav')
-# song.play()
-
-hue = 0
 
 head_init(s, allPixels)
+jointai.append(SegmentJoint([allEdges[0], allEdges[1]]))
+
 head_draw_all(s, 0, 0, 0)
+head_clear_all(s)
 update_all_argb(s)
 sleep(0.5)
 
-# while (True):
-#   head_draw_all(s, 255, 0, 0)
-#   update_all_argb(s)
 r = 255
 g = 0
 b = 60
@@ -118,7 +107,7 @@ while False:
 r = 0
 g = 0
 b = 0
-while True:
+while False:
     # head_draw_some(6, 0, s, 255, 10, 10)
 
     for i in range(0, len(allEdges)):
@@ -140,8 +129,63 @@ while True:
     update_all_argb(s)
     sleep(0.5)
 
-while True:
+while False:
+    for j in range(0, len(jointai)):
+        print(jointai)
+        for ss in range(0, len(jointai[j].strips)):
+            head_color_edge_joint(s, jointai[j].strips[ss], 255, 0, 0)
+    update_all_argb(s)
     sleep(1)
+while False:  # Random red stripes
+    head_clear_all(s)
+    for r in range(0, 2):
+        stripIndexx = random.randint(0, len(allEdges)-6)
+        head_color_edge(s, stripIndexx, 255, 0, 0)
+        head_color_edge(s, stripIndexx + 5, 255, 0, 0)
+    update_all_argb(s)
+
+head_clear_all(s)
+head_draw_all(s, 0, 0, 0)
+update_all_argb(s)
+
+dimSpeed = 0.2
+amountOfStripes = 30
+
+randomBitsHue: float = []
+randomBitsIndex: int = []
+for i in range(0, amountOfStripes):
+    randomBitsIndex.append(0)
+    randomBitsHue.append(random.random())
+
+
+while False:  # Random dim stripes
+    for r in range(0, amountOfStripes):
+
+        randomBitsHue[r] -= dimSpeed
+        if (randomBitsHue[r] <= 0.1):
+            head_color_edge(s, randomBitsIndex[r], 0, 0, 0)
+            randomBitsIndex[r] = random.randint(0, len(allEdges)-1)
+            randomBitsHue[r] = 1
+
+        hue = rgb2hsv(0, 255, 0)[0]
+        head_color_edge(s, randomBitsIndex[r],
+                        *hsv2rgb(hue, 1, randomBitsHue[r]))
+
+    update_all_argb(s)
+    sleep(0.05)
+
+animation_runtime_s = 5
+start_time = time()
+animation = 0
+animation_count = 10
+
+beat_threshold = 0.5
+
+use_rms = False
+song = AudioFile('Armors - DOA.wav')
+song.play()
+
+hue = 0
 
 try:
 
@@ -155,47 +199,24 @@ try:
             metric = song.get_rms()
         else:
             new_fft_values = song.get_fft()
-            smooth_fft_values(fft_values, new_fft_values, 0.9)
+            smooth_fft_values(fft_values, new_fft_values, 0)
             metric = sum(v for v in fft_values[0:5])
+            print(fft_values[0:10])
 
         # Normalize metric
         max_metric = max(max_metric, metric)
         metric = metric / max_metric
-
+        # print(metric)
         # Visualize
-        if metric > 0.8:
-            hue = randrange(360)
+        if metric > 1:
+            opacity = 1
+        else:
+            opacity = metric
 
         # cube_random_all_faces(s)
-        cube_draw_all(s, *hsv2rgb(hue, 1, metric))
+        cube_draw_all(s, *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
         update_all_argb(s)
         sleep(0.04)
-
-        # žcube_color_face(s, F.BACK_IN, 255, 0, 0)
-
-        # if (time() - last_time) < 0.03:
-        #     sleep(time() - last_time)
-        #     last_time = time()
-
-        # if animation == 0:
-
-        # if animation == 1:
-
-        # if animation == 2:
-
-        # if animation == 3:
-        #     if metric > beat_threshold:
-
-        # if animation == 4:
-        #     if metric > beat_threshold:
-
-        # if animation == 5:
-        #     if metric > beat_threshold:
-
-        # if (start_time + animation_runtime_s) < time():
-        #     animation += 1
-        #     if animation >= animation_count:
-        #         animation = 0
 
 finally:
     song.terminate()
