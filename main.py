@@ -29,52 +29,51 @@ from audio import AudioFile, AudioMic, smooth_fft_values
     BIG_SIDE = 6
 '''
 
-LBLpixels = [21, 27, 27, 20, 26, 30, 30,
-             30, 25, 20, 27, 23, 26, 26, 26, 27, 17,
-             26, 24, 26, 23, 33, 39, 31, 35, 41, 41, 36, 36, 29]
+BOTTOM_BACK_0 = [21, 27, 27, 20, 26, 30, 30,
+                 30, 25, 20, 27, 23, 26, 26, 26, 27, 17,
+                 26, 24, 26, 23, 33, 39, 31, 35, 41, 41, 36, 36, 29]
 
-FFRpixels = [33, 18, 18, 21, 18, 30, 33, 29,
-             30, 27, 20, 21, 21, 25, 30, 26, 36, 18, 18, 18, 27, 23, 21, 33, 31, 24, 24, 27, 28, 24, 22, 25, 25, 18, 34, 21,
-             24, 25, 25, 18, 29, 22, 18]
+BOTTOM_FRONT_0 = [33, 18, 18, 21, 18, 30, 33, 29,
+                  30, 27, 20, 21, 21, 25, 30, 26, 36, 18, 18, 18, 27, 23, 21, 33, 31, 24, 24, 27, 28, 24, 22, 25, 25, 18, 34, 21,
+                  24, 25, 25, 18, 29, 22, 18]
 
-mazenisSOnas0 = [50, 49, 43, 43, 46, 41, 38, 44, 38, 41]
+SMALL_SIDE_0 = [50, 49, 43, 43, 46, 41, 38, 44, 38, 41]
 
-mazesnisSonas1 = [44, 43, 30, 22, 23, 37, 49, 39,
-                  42, 39, 40, 47, 42, 38, 41, 27, 19, 25, 20]
+SMALL_SIDE_1 = [44, 43, 30, 22, 23, 37, 49, 39,
+                42, 39, 40, 47, 42, 38, 41, 27, 19, 25, 20]
 
-priekis0 = [23, 43, 49, 49, 47, 35, 14, 15,
-            22, 27, 20, 23, 20, 17, 21, 16, 14, 11, 12, 13, 36, 29, 31, 28, 15, 14, 20, 8, 20, 14, 14, 28, 30]
+FACE_0 = [23, 43, 49, 49, 47, 35, 14, 15,
+          22, 27, 20, 23, 20, 17, 21, 16, 14, 11, 12, 13, 36, 29, 31, 28, 15, 14, 20, 8, 20, 14, 14, 28, 30]
 
-priekis1 = [23, 43, 48, 49, 48, 32, 14, 15,
-            22, 27, 23, 25, 17, 17, 20, 16, 12, 13, 12, 28, 28, 11, 11, 13, 35, 23]
+FACE_1 = [23, 43, 48, 49, 48, 32, 14, 15,
+          22, 27, 23, 25, 17, 17, 20, 16, 12, 13, 12, 28, 28, 11, 11, 13, 35, 23]  # BOTTOM FRONT 0
 
-didesnisSonas0 = [50, 50, 42, 43, 49, 49,
-                  49, 48, 41, 38, 44, 37, 41, 42, 37, 35, 37, 41]
+BIG_SIDE_0 = [50, 50, 42, 43, 49, 49,
+              49, 48, 41, 38, 44, 37, 41, 42, 37, 35, 37, 41]
 
-didesnisSonas1 = [44, 43, 30, 23, 24, 39,
-                  49, 40, 42, 37, 42, 48, 41, 37, 41, 27, 19, 25, 19]
+BIG_SIDE_1 = [44, 43, 30, 23, 24, 39,
+              49, 40, 42, 37, 42, 48, 41, 37, 41, 27, 19, 25, 19]
 
-pixels = []
 
 # ledu skaiciai virsuje teorines reiksmes
 did = 49
 maz = 43
 
-virsugalvisKaire = [maz + 1, maz, did, did, maz, maz, did,
-                    did, maz, maz, did, did, maz, maz, did, did, maz, maz]
-virsugalvisKaire = [maz + 1, maz, did, did, maz, maz,
-                    did, maz, maz, did, did, maz, maz, did, did, maz, maz]
+TOP_1 = [maz + 1, maz, did, did, maz, maz, did,
+         did, maz, maz, did, did, maz, maz, did, did, maz, maz]
+TOP_0 = [maz + 1, maz, did, did, maz, maz,
+         did, maz, maz, did, did, maz, maz, did, did, maz, maz]
 
-apaciagalas1 = [27, 26, 30, 30, 30, 24, 20,
-                21, 23, 26, 26, 20, 27, 18, 26, 21, 25, 24, 30, 33, 35, 35, 41, 42, 36, 36, 28]
+BOTTOM_BACK_1 = [27, 26, 30, 30, 30, 24, 20,
+                 21, 23, 26, 26, 20, 27, 18, 26, 21, 25, 24, 30, 33, 35, 35, 41, 42, 36, 36, 28]
 
-apaciapriekis1 = [16, 25, 27, 29, 37, 27, 19,
+BOTTOM_FRONT_1 = [16, 25, 27, 29, 37, 27, 19,
                   16, 38, 22,  32, 28, 26, 34, 18, 28, 21, 21, 8, 10, 18, 11, 8, 10, 14, 16, 9, 33, 31, 26, 32, 28, 28, 24, 19, 18, 26, 21, 24, 21, 24, 25, 25, 18, 29, 22, 17]
 
+allPixels = [BOTTOM_BACK_0, BOTTOM_BACK_1, BOTTOM_FRONT_0,
+             BOTTOM_FRONT_1, SMALL_SIDE_0, SMALL_SIDE_1, FACE_0, FACE_1, TOP_0, TOP_1, BIG_SIDE_0, BIG_SIDE_1]
 
 jointai: SegmentJoint = {}
-
-# 6 - galas didesnis, 5 - virsugalvis, 4 - priekis, 3 - mazesnis sonas,  2 - priekis apacia, 1 - apacia galas
 
 s = Serial('COM6', 460800)
 s.timeout = 0.01
@@ -87,12 +86,12 @@ animation_count = 10
 beat_threshold = 0.5
 
 use_rms = True
-#song = AudioFile('trenk.wav')
+# song = AudioFile('trenk.wav')
 # song.play()
 
 hue = 0
 
-head_init(s, mazesnisSonas1)
+head_init(s, allPixels)
 head_draw_all(s, 0, 0, 0)
 update_all_argb(s)
 sleep(0.5)
@@ -113,27 +112,30 @@ while False:
         head_draw_some(i, 0, s, r, g, b)
         update_all_argb(s)
         sleep(0.03)
-    #cube_color_edge(s, E.TOP_FRONT_FRONT, 255, 0, 0)
+    # cube_color_edge(s, E.TOP_FRONT_FRONT, 255, 0, 0)
 # cube_random_all_faces(s)
 # update_all_argb(s)
 r = 0
 g = 0
 b = 0
 while True:
-    #head_draw_some(6, 0, s, 255, 10, 10)
-    for i in range(0, len(FFRedges)):
-        #r = random.randint(0, 255)
-        #g = random.randint(0, 255)
-        #b = random.randint(0, 255)
+    # head_draw_some(6, 0, s, 255, 10, 10)
+
+    for i in range(0, len(allEdges)):
+        # r = random.randint(0, 255)
+        # g = random.randint(0, 255)
+        # b = random.randint(0, 255)
+
         if i % 2 == 0:
             r = 255
             b = 0
         else:
             r = 0
             b = 255
-        head_draw_some(6, 0, s, 255, 10, 10)
-        head_color_edge(s, i, r, g, b, FFRedges)
-        #head_draw_all(s, 255, 10, 10)
+        # head_draw_some(allEdges[i].strips[0][0], allEdges[i].strips[0][1], s, 255, 10, 10)
+        if (allEdges[i].strips[0][0] == E.SMALL_SIDE):
+            head_color_edge(s, i, r, g, b)
+    head_draw_all(s, 255, 10, 10)
     update_all_argb(s)
     sleep(1)
 
