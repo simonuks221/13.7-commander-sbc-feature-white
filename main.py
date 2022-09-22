@@ -1,4 +1,7 @@
 #!./venv/bin/python
+import time
+import numpy as np
+import matplotlib.pyplot as plt
 import asyncio
 from time import *
 from serial import Serial
@@ -125,7 +128,7 @@ while False:
         # head_draw_some(allEdges[i].strips[0][0], allEdges[i].strips[0][1], s, 255, 10, 10)
 
         head_color_edge(s, i, r, g, b)
-    #head_draw_all(s, 255, 10, 10)
+    # head_draw_all(s, 255, 10, 10)
     update_all_argb(s)
     sleep(0.5)
 
@@ -174,6 +177,14 @@ while False:  # Random dim stripes
     update_all_argb(s)
     sleep(0.05)
 
+
+plt.ion()  # Stop matplotlib windows from blocking
+
+# Setup figure, axis and initiate plot
+fig, ax = plt.subplots()
+xdata, ydata = [], []
+ln, = ax.plot([], [], 'ro-')
+
 animation_runtime_s = 5
 start_time = time()
 animation = 0
@@ -189,7 +200,7 @@ hue = 0
 
 try:
 
-    max_metric = 0.5
+    max_metric = 10
     fft_values = []
     last_time = time()
     while True:
@@ -199,15 +210,28 @@ try:
             metric = song.get_rms()
         else:
             new_fft_values = song.get_fft()
-            smooth_fft_values(fft_values, new_fft_values, 0)
+            smooth_fft_values(fft_values, new_fft_values, 0.8)
             metric = sum(v for v in fft_values[0:5])
             print(fft_values[0:10])
 
         # Normalize metric
         max_metric = max(max_metric, metric)
         metric = metric / max_metric
-        # print(metric)
-        # Visualize
+
+        xdata = np.arange(20)
+        ydata = fft_values[0:20]
+
+        ln.set_xdata(xdata)
+        ln.set_ydata(ydata)
+
+        ax.relim()
+        ax.autoscale_view()
+
+        # Update the window
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+       # print(metric)
+       # Visualize
         if metric > 1:
             opacity = 1
         else:
