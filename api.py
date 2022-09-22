@@ -2,7 +2,7 @@ from serial import Serial
 from struct import pack, unpack
 from enum import IntEnum
 from typing import Optional
-from time import time
+from time import *
 
 DEBUG = True
 
@@ -358,7 +358,13 @@ def update_argb(s: Serial, address: int):
 
 def update_all_argb(s: Serial):
     """ Updates ARGB LED strips """
-    return send_cmd(s, 255, CMD.UPDATE_ARGB)
+    for i in range(0, 7):
+        if i != 4 and i != 2:
+            send_cmd(s, i, CMD.UPDATE_ARGB)
+    sleep(0.05)  # 0.05 baisiausiu atveju
+    send_cmd(s, 4, CMD.UPDATE_ARGB)
+    return send_cmd(s, 2, CMD.UPDATE_ARGB)
+    # return send_cmd(s, 255, CMD.UPDATE_ARGB)
 
 
 def clear_argb(s: Serial, address: int, port: int, pixel_count: int):

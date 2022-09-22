@@ -34,6 +34,12 @@ def head_draw_some(kanalas: int, portas: int, s: Serial, r: int, g: int, b: int)
     set_argb(s, kanalas, portas, 0, 1299, r, g, b)
 
 
+def head_clear_all(s: Serial):
+    for i in range(0, 7):
+        set_argb(s, i, 0, 0, 1299, 0, 0, 0)
+        set_argb(s, i, 1, 0, 1299, 0, 0, 0)
+
+
 def head_draw_all(s: Serial, r: int, g: int, b: int):
     set_argb(s, 1, 0, 0, 1299, r, g, b)
     set_argb(s, 1, 1, 0, 1299, r, g, b)
@@ -51,8 +57,6 @@ def head_draw_all(s: Serial, r: int, g: int, b: int):
 
 def head_init(s: Serial, allPixels: int):
     curr: int = 0
-    FBadress = 6
-    FBLport = 1
     i: int = 0
 
     for adress in range(0, 6):

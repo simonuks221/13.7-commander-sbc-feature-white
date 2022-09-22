@@ -4,6 +4,7 @@ from segment import *
 from enum import IntEnum
 from color_utils import *
 from time import *
+from head import *
 
 '''
 class E(IntEnum):
@@ -96,8 +97,6 @@ FBLedges = {}
 
 def cube_init(s: Serial):
     # Setup edges
-    FBadress = 1
-    FBLport = 0
     curr = 0
     for e in FBLpixels:
         #FBLedges.append(LEDSegment([FBadress, FBLport, curr, curr + e]))
@@ -170,7 +169,7 @@ def cube_random_all_edges(s: Serial):
 
 
 def cube_snakes(s: Serial, t: int, F: IntEnum, count: int, speed: int, duration: float, fade_amount: int, r: int, g: int, b: int):
-    segment: LEDSegment = cube_edges[F]
+    segment: LEDSegment = allEdges[F]
     length = segment.size()
     interval = length / count
     moves = abs(interval / speed)
