@@ -1,5 +1,5 @@
 from api import *
-from examples import argb_audio_example
+#from examples import argb_audio_example
 from segment import *
 from enum import IntEnum
 from color_utils import *
@@ -168,6 +168,7 @@ def draw_all_exc_EyeMou(s: Serial, duration: float, r: int, g: int, b: int):
     update_all_argb(s)
     sleep(duration)
 
+
 def blink_EYEMou(s: Serial, blinks: int, r: int, g: int, b: int):
     for i in range(0, blinks):
         for i in range(0, len(EYE_R)):
@@ -179,6 +180,7 @@ def blink_EYEMou(s: Serial, blinks: int, r: int, g: int, b: int):
         update_all_argb(s)
         head_clear_all(s)
         update_all_argb(s)
+
 
 def gen_rand_stripes(s: Serial, probabaility: int, r: int,  g: int, b: int):
     works = 0
@@ -193,4 +195,3 @@ def gen_rand_stripes(s: Serial, probabaility: int, r: int,  g: int, b: int):
             head_color_edge(s, stripIndexx, r, g, b)
             head_color_edge(s, stripIndexx + 5, r, g, b)
         update_all_argb(s)
-
