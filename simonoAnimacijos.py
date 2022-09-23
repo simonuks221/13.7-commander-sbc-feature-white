@@ -79,23 +79,27 @@ while False:
 def DrawJoints(s: Serial):
     while True:
         for j in range(0, len(jointai)):
-
+            head_clear_all(s)
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
             for ss in range(0, len(jointai[j].strips)):
-                head_color_edge_joint(s, jointai[j].strips[ss], 255, 0, 0)
+                head_color_edge_joint(s, jointai[j].strips[ss], r, g, b)
+            update_all_argb(s)
+            sleep(1)
+
+
+def RandomStripes(s: Serial):
+    while True:  # Random red stripes
+        head_clear_all(s)
+        for r in range(0, 5):
+            stripIndexx = random.randint(0, len(allEdges)-6)
+            head_color_edge(s, stripIndexx, 255, 0, 0)
+            head_color_edge(s, stripIndexx + 5, 255, 0, 0)
         update_all_argb(s)
-        sleep(1)
 
 
-while False:  # Random red stripes
-    head_clear_all(s)
-    for r in range(0, 2):
-        stripIndexx = random.randint(0, len(allEdges)-6)
-        head_color_edge(s, stripIndexx, 255, 0, 0)
-        head_color_edge(s, stripIndexx + 5, 255, 0, 0)
-    update_all_argb(s)
-
-
-def RandomDimStripes():
+def RandomDimStripes(s: Serial):
 
     head_clear_all(s)
     head_draw_all(s, 0, 0, 0)

@@ -28,8 +28,9 @@ s = Serial('COM6', 460800)
 s.timeout = 0.01
 
 
-head_init(s, allPixels)
-jointai.append(SegmentJoint([allEdges[0], allEdges[1]]))
+head_init(s, allPixels, jointIndexes)
+# apacia galas kaire, nulinis desinej
+
 
 head_draw_all(s, 0, 0, 0)
 head_clear_all(s)
@@ -38,6 +39,7 @@ sleep(0.5)
 
 
 while True:
-    DrawJoints(s)
+    # DrawJoints(s)
+    RandomStripes(s)
     # SongAnimations(s)
     sleep(0.1)
