@@ -12,10 +12,10 @@ from enum import IntEnum
 from time import time
 from math import sqrt
 import random
-#from head import *
+from head import *
 from joint import *
 
-from audio import AudioFile, AudioMic, smooth_fft_values
+#from audio import AudioFile, AudioMic, smooth_fft_values
 # from control_socket import ControlSocket
 
 # from examples import argb_strip_example, argb_fft_example, argb_fft_pygame_example
