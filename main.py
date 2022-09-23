@@ -31,15 +31,25 @@ s.timeout = 0.01
 head_init(s, allPixels, jointIndexes)
 # apacia galas kaire, nulinis desinej
 
-
-head_draw_all(s, 0, 0, 0)
 head_clear_all(s)
+head_draw_all(s, 0, 0, 0)
 update_all_argb(s)
 sleep(0.5)
 
 
 while True:
+    # cube_clear_all(s)
+    # update_all_argb(s)
+    # sleep(1)
     # DrawJoints(s)
-    RandomStripes(s)
+    # RandomStripes(s)
+    # RandomDimStripes(s)
     # SongAnimations(s)
+    #Flash(s, 5)
+    r, g, b = GetNeonColor()
+    # head_clear_all(s)
+    head_draw_all(s, r, g, b)
+    update_all_argb(s)
+    # print(get_temperature(s, 1))
+    #print(sync_time(s, 1))
     sleep(0.1)

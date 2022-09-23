@@ -358,13 +358,13 @@ def update_argb(s: Serial, address: int):
 
 def update_all_argb(s: Serial):
     """ Updates ARGB LED strips """
-    for i in range(0, 7):
-        if i != 4 and i != 2:
-            send_cmd(s, i, CMD.UPDATE_ARGB)
+    send_cmd(s, 1, CMD.UPDATE_ARGB)
+    send_cmd(s, 3, CMD.UPDATE_ARGB)
+    send_cmd(s, 5, CMD.UPDATE_ARGB)
+    send_cmd(s, 6, CMD.UPDATE_ARGB)
     sleep(0.05)  # 0.05 baisiausiu atveju
     send_cmd(s, 4, CMD.UPDATE_ARGB)
     return send_cmd(s, 2, CMD.UPDATE_ARGB)
-    # return send_cmd(s, 255, CMD.UPDATE_ARGB)
 
 
 def clear_argb(s: Serial, address: int, port: int, pixel_count: int):

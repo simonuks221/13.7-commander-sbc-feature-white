@@ -1,3 +1,4 @@
+from pydoc import stripid
 import time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,9 +18,45 @@ from joint import *
 
 from audio import AudioFile, AudioMic, smooth_fft_values
 
+# global neonColorINdex
+
+neonColors = [[199, 36, 177], [77, 77, 255], [224, 231, 34], [
+    255, 173, 0], [210, 39, 48], [219, 62, 177], [68, 214, 44]]
+
 r = 255
 g = 0
 b = 50
+
+neonColorINdex = 0
+neonColorINdexNext = 1
+neonColorT = 0.1
+
+
+def GetNeonColor():
+    global neonColorINdex
+    global neonColorINdexNext
+    global neonColorT
+
+    neonColorT += 0.1
+
+    if (neonColorT >= 1):
+        neonColorT = 0.1
+        neonColorINdex += 1
+        neonColorINdexNext += 1
+        if (neonColorINdex == len(neonColors)):
+            neonColorINdex = 0
+        if (neonColorINdexNext == len(neonColors)):
+            neonColorINdexNext = 0
+    r = (int)(abs(neonColors[neonColorINdex][0] - neonColors[neonColorINdexNext]
+                  [0]) * (neonColorT if neonColors[neonColorINdex][0] < neonColors[neonColorINdexNext][0] else 1 - neonColorT))
+
+    g = (int)(abs(neonColors[neonColorINdex][1] - neonColors[neonColorINdexNext]
+                  [1]) * (neonColorT if neonColors[neonColorINdex][1] < neonColors[neonColorINdexNext][1] else 1 - neonColorT))
+    b = (int)(abs(neonColors[neonColorINdex][2] - neonColors[neonColorINdexNext]
+                  [2]) * (neonColorT if neonColors[neonColorINdex][2] < neonColors[neonColorINdexNext][2] else 1 - neonColorT))
+    return (r, g, b)
+
+
 while False:
     r = random.randint(0, 255)
     g = random.randint(0, 255)
@@ -92,19 +129,19 @@ def DrawJoints(s: Serial):
 def RandomStripes(s: Serial):
     while True:  # Random red stripes
         head_clear_all(s)
-        for r in range(0, 5):
-            stripIndexx = random.randint(0, len(allEdges)-6)
-            head_color_edge(s, stripIndexx, 255, 0, 0)
-            head_color_edge(s, stripIndexx + 5, 255, 0, 0)
+        # (r, g, b) = GetNeonColor()
+        r = 255
+        g = 0
+        b = 0
+        for r in range(0, 25):
+            stripIndexx = random.randint(0, len(allEdges)-10)
+            head_color_edge(s, stripIndexx, r, g, b)
+            head_color_edge(
+                s, min(len(allEdges)-1, max(1, len(allEdges) - stripIndexx)), r, g, b)
         update_all_argb(s)
 
 
 def RandomDimStripes(s: Serial):
-
-    head_clear_all(s)
-    head_draw_all(s, 0, 0, 0)
-    update_all_argb(s)
-
     dimSpeed = 0.2
     amountOfStripes = 30
 
@@ -114,7 +151,7 @@ def RandomDimStripes(s: Serial):
         randomBitsIndex.append(0)
         randomBitsHue.append(random.random())
 
-    while False:  # Random dim stripes
+    while True:  # Random dim stripes
         for r in range(0, amountOfStripes):
 
             randomBitsHue[r] -= dimSpeed
@@ -123,7 +160,7 @@ def RandomDimStripes(s: Serial):
                 randomBitsIndex[r] = random.randint(0, len(allEdges)-1)
                 randomBitsHue[r] = 1
 
-            hue = rgb2hsv(0, 255, 0)[0]
+            hue = rgb2hsv(210, 39, 48)[0]
             head_color_edge(s, randomBitsIndex[r],
                             *hsv2rgb(hue, 1, randomBitsHue[r]))
 
@@ -141,8 +178,18 @@ class SongAnimation(IntEnum):
     DIM = 6
 
 
+def Flash(s: Serial, times):
+    for i in range(0, times):
+        head_draw_all(s, 255, 0, 0)
+        update_all_argb(s)
+        sleep(0.05)
+        head_clear_all(s)
+        update_all_argb(s)
+        sleep(0.05)
+
+
 def SongAnimations(s: Serial):
-    songAnimation = SongAnimation.ROLL_MOUTH
+    songAnimation = SongAnimation.ROLL_ALL
     opacity = 1
     useDimming = False
     song = AudioFile('sound1.wav')
@@ -218,7 +265,7 @@ def SongAnimations(s: Serial):
                 oneStep = 1
                 for step in range(1, (int)(len(allEdges[MOUTH[lightIndex1]])/oneStep)):
                     head_clear_all(s)
-                    #oneStep: int = len(allEdges[MOUTH[lightIndex1]])/5
+                    # oneStep: int = len(allEdges[MOUTH[lightIndex1]])/5
                     allEdges[MOUTH[lightIndex1]].set_range(
                         s, (int)(oneStep * step), (min)(oneStep * step + 3, len(allEdges[MOUTH[lightIndex1]])-1), *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
                     if (lightIndex1 + 1 >= len(MOUTH)):
