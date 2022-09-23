@@ -14,7 +14,6 @@ from math import sqrt
 import random
 #from head import *
 from joint import *
-from simonoAnimacijos import *
 
 from audio import AudioFile, AudioMic, smooth_fft_values
 # from control_socket import ControlSocket
@@ -44,7 +43,7 @@ while True:
     full = random.randint(0, 3)
     print(duration)
     blink_EYEMou(s, blinks, r, g, b)
-    if(blinks == 1):
+    if (blinks == 1):
         head_draw_all(s, r, g, b)
         update_all_argb(s)
     else:
@@ -52,4 +51,3 @@ while True:
 
     gen_rand_stripes(s, 5, r, g, b)
     sleep(0.1)
-
