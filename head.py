@@ -5,6 +5,7 @@ from enum import IntEnum
 from color_utils import *
 from time import *
 from joint import *
+import random
 
 allEdges = {}
 
@@ -61,7 +62,7 @@ BOTTOM_FRONT_1 = [16, 25, 27, 29, 37, 27, 19,
 allPixels = [BOTTOM_BACK_0, BOTTOM_BACK_1, BOTTOM_FRONT_0,
              BOTTOM_FRONT_1, SMALL_SIDE_0, SMALL_SIDE_1, FACE_0, FACE_1, TOP_0, TOP_1, BIG_SIDE_0, BIG_SIDE_1]
 
-jointai: SegmentJoint = []
+#jointai: SegmentJoint = []
 
 tmp = len(BOTTOM_BACK_0) + len(BOTTOM_FRONT_0) + len(SMALL_SIDE_1) + \
     len(BOTTOM_BACK_1) + len(BOTTOM_FRONT_1) + len(SMALL_SIDE_0) - 1
@@ -153,3 +154,43 @@ def head_init(s: Serial, allPixels: int):
     print(enable_argb(s, 5, 1, 1600))
     print(enable_argb(s, 6, 0, 1600))
     print(enable_argb(s, 6, 1, 1600))
+
+
+def draw_all_exc_EyeMou(s: Serial, duration: float, r: int, g: int, b: int):
+    head_draw_all(s, r, g, b)
+    for i in range(0, len(MOUTH)):
+        head_draw_some(2, 0, s, r, g, b)
+        head_color_edge(s, MOUTH[i], 0, 0, 0)
+    update_all_argb(s)
+    for i in range(0, len(EYE_R)):
+        head_color_edge(s, EYE_R[i], 0, 0, 0)
+        head_color_edge(s, EYE_L[i], 0, 0, 0)
+    update_all_argb(s)
+    sleep(duration)
+
+def blink_EYEMou(s: Serial, blinks: int, r: int, g: int, b: int):
+    for i in range(0, blinks):
+        for i in range(0, len(EYE_R)):
+            head_color_edge(s, EYE_R[i], r, g, b)
+            head_color_edge(s, EYE_L[i], r, g, b)
+        for i in range(0, len(MOUTH)):
+            head_draw_some(2, 0, s, 0, 0, 0)
+            head_color_edge(s, MOUTH[i], r, g, b)
+        update_all_argb(s)
+        head_clear_all(s)
+        update_all_argb(s)
+
+def gen_rand_stripes(s: Serial, probabaility: int, r: int,  g: int, b: int):
+    works = 0
+    while works != 1:  # Random red stripes
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+        works = random.randint(0, probabaility)
+        head_clear_all(s)
+        for r in range(0, 10):
+            stripIndexx = random.randint(0, len(allEdges) - 6)
+            head_color_edge(s, stripIndexx, r, g, b)
+            head_color_edge(s, stripIndexx + 5, r, g, b)
+        update_all_argb(s)
+
