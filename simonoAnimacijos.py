@@ -134,16 +134,16 @@ class SongAnimation(IntEnum):
 
 
 def SongAnimations(s: Serial):
-    songAnimation = SongAnimation.ROLL_ALL
+    songAnimation = SongAnimation.ROLL_MOUTH
     opacity = 1
-    useDimming = True
+    useDimming = False
     song = AudioFile('sound1.wav')
     song.play()
     t = 0
     try:
         max_metric = 130
         fft_values = []
-        lightIndex1 = 0
+        lightIndex1 = 1
         lightIndex2 = 0
 
         while True:
@@ -185,7 +185,6 @@ def SongAnimations(s: Serial):
                 head_draw_some(2, 0, s, 0, 0, 0)
                 if (lightIndex1 == len(MOUTH)):
                     lightIndex1 = 0
-                print(lightIndex1)
                 head_color_edge(
                     s, MOUTH[lightIndex1], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
                 lightIndex1 += 1
@@ -208,8 +207,20 @@ def SongAnimations(s: Serial):
                 head_draw_some(2, 0, s, 0, 0, 0)
                 if (lightIndex1 == len(MOUTH)):
                     lightIndex1 = 0
-                head_color_edge(
-                    s, MOUTH[lightIndex1], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                oneStep = 1
+                for step in range(1, (int)(len(allEdges[MOUTH[lightIndex1]])/oneStep)):
+                    head_clear_all(s)
+                    #oneStep: int = len(allEdges[MOUTH[lightIndex1]])/5
+                    allEdges[MOUTH[lightIndex1]].set_range(
+                        s, (int)(oneStep * step), (min)(oneStep * step + 3, len(allEdges[MOUTH[lightIndex1]])-1), *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    if (lightIndex1 + 1 >= len(MOUTH)):
+                        lightIndex2 = 0
+                    else:
+                        lightIndex2 = lightIndex1 + 1
+                    if (oneStep * step + 3 >= len(allEdges[MOUTH[lightIndex1]])):
+                        allEdges[MOUTH[lightIndex2]].set_range(
+                            s, 1, (int)(oneStep * step + 3 - len(allEdges[MOUTH[lightIndex1]])+1), *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    update_all_argb(s)
                 lightIndex1 += 1
             update_all_argb(s)
             # sleep(0.05)
