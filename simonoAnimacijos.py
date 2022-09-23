@@ -75,13 +75,17 @@ while False:
     update_all_argb(s)
     sleep(0.5)
 
-while False:
-    for j in range(0, len(jointai)):
-        print(jointai)
-        for ss in range(0, len(jointai[j].strips)):
-            head_color_edge_joint(s, jointai[j].strips[ss], 255, 0, 0)
-    update_all_argb(s)
-    sleep(1)
+
+def DrawJoints(s: Serial):
+    while True:
+        for j in range(0, len(jointai)):
+
+            for ss in range(0, len(jointai[j].strips)):
+                head_color_edge_joint(s, jointai[j].strips[ss], 255, 0, 0)
+        update_all_argb(s)
+        sleep(1)
+
+
 while False:  # Random red stripes
     head_clear_all(s)
     for r in range(0, 2):

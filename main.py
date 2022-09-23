@@ -15,7 +15,7 @@ from math import sqrt
 import random
 from head import *
 from joint import *
-from simonoAnimacijos import SongAnimations
+from simonoAnimacijos import *
 
 from audio import AudioFile, AudioMic, smooth_fft_values
 # from control_socket import ControlSocket
@@ -38,5 +38,6 @@ sleep(0.5)
 
 
 while True:
-    SongAnimations(s)
+    DrawJoints(s)
+    # SongAnimations(s)
     sleep(0.1)
