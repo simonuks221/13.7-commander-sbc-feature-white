@@ -22,7 +22,7 @@ from joint import *
 
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
-s = Serial('COM1', 460800)
+s = Serial('ttyUSB0', 460800)
 s.timeout = 0.01
 
 
