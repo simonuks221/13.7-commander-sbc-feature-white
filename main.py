@@ -23,8 +23,8 @@ from simonoAnimacijos import *
 
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
-s = Serial('/dev/ttyUSB0', 460800)
-#s = Serial('COM7', 460800)
+#s = Serial('/dev/ttyUSB0', 460800)
+s = Serial('COM7', 460800)
 s.timeout = 0.01
 
 
@@ -39,7 +39,7 @@ sleep(0.5)
 song = AudioFile('sound2.wav')
 song.play()
 while True:
-    '''
+
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
@@ -56,5 +56,5 @@ while True:
 
     gen_rand_stripes(s, 5, r, g, b)
     sleep(0.1)
-    '''
-    SongAnimations(s, song)
+
+    #SongAnimations(s, song)
