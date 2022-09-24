@@ -48,11 +48,14 @@ while True:
     full = random.randint(0, 3)
     print(duration)
     blink_EYEMou(s, blinks, r, g, b)
+    sleep(0.1)
     if (blinks == 1):
         head_draw_all(s, r, g, b)
         update_all_argb(s)
+        sleep(0.1)
     else:
         draw_all_exc_EyeMou(s, duration, r, g, b)
+        sleep(0.1)
     full = random.randint(0, 4)
     if full == 0:
         FlagsUkraine(s)
