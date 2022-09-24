@@ -54,9 +54,10 @@ while True:
         update_all_argb(s)
         sleep(0.1)
     else:
+        sleep(0.1)
         draw_all_exc_EyeMou(s, duration, r, g, b)
         sleep(0.1)
-    full = random.randint(0, 4)
+    full = random.randint(0, 8)
     if full == 0:
         FlagsUkraine(s)
         sleep(0.1)
