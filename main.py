@@ -1,4 +1,5 @@
 #!./venv/bin/python
+from asyncio.windows_events import NULL
 import time
 import numpy as np
 #import matplotlib.pyplot as plt
@@ -14,6 +15,7 @@ from math import sqrt
 import random
 from head import *
 from joint import *
+from simonoAnimacijos import *
 
 #from audio import AudioFile, AudioMic, smooth_fft_values
 # from control_socket import ControlSocket
@@ -22,7 +24,9 @@ from joint import *
 
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
-s = Serial('/dev/ttyUSB0', 460800)
+s = NULL
+#s = Serial('/dev/ttyUSB0', 460800)
+s = Serial('COM7', 460800)
 s.timeout = 0.01
 
 
@@ -34,7 +38,10 @@ head_clear_all(s)
 update_all_argb(s)
 sleep(0.5)
 
+song = AudioFile('sound2.wav')
+song.play()
 while True:
+    '''
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
@@ -51,3 +58,5 @@ while True:
 
     gen_rand_stripes(s, 5, r, g, b)
     sleep(0.1)
+    '''
+    SongAnimations(s, song)

@@ -16,6 +16,48 @@ from joint import *
 
 from audio import AudioFile, AudioMic, smooth_fft_values
 
+neonColors = [[199, 36, 177], [77, 77, 255], [224, 231, 34], [
+    255, 173, 0], [210, 39, 48], [219, 62, 177], [68, 214, 44]]
+
+r = 255
+g = 0
+b = 50
+
+neonColorINdex = 0
+neonColorINdexNext = 1
+neonColorT = 0.1
+
+
+def GetRandomNeonColor():
+    randomas = random.randint(0, len(neonColors) - 1)
+    return neonColors[randomas]
+
+
+def GetNeonColor():
+    global neonColorINdex
+    global neonColorINdexNext
+    global neonColorT
+
+    neonColorT += 0.1
+
+    if (neonColorT >= 1):
+        neonColorT = 0.1
+        neonColorINdex += 1
+        neonColorINdexNext += 1
+        if (neonColorINdex == len(neonColors)):
+            neonColorINdex = 0
+        if (neonColorINdexNext == len(neonColors)):
+            neonColorINdexNext = 0
+    r = (int)(abs(neonColors[neonColorINdex][0] - neonColors[neonColorINdexNext]
+                  [0]) * (neonColorT if neonColors[neonColorINdex][0] < neonColors[neonColorINdexNext][0] else 1 - neonColorT))
+
+    g = (int)(abs(neonColors[neonColorINdex][1] - neonColors[neonColorINdexNext]
+                  [1]) * (neonColorT if neonColors[neonColorINdex][1] < neonColors[neonColorINdexNext][1] else 1 - neonColorT))
+    b = (int)(abs(neonColors[neonColorINdex][2] - neonColors[neonColorINdexNext]
+                  [2]) * (neonColorT if neonColors[neonColorINdex][2] < neonColors[neonColorINdexNext][2] else 1 - neonColorT))
+    return (r, g, b)
+
+
 r = 255
 g = 0
 b = 50
@@ -85,13 +127,14 @@ def DrawJoints(s: Serial):
         sleep(1)
 
 
-while False:  # Random red stripes
+def RandomStripes(s: Serial):
+    # Random red stripes
     head_clear_all(s)
-    for r in range(0, 2):
+    for r in range(0, 10):
+        r, g, b = GetRandomNeonColor()
         stripIndexx = random.randint(0, len(allEdges)-6)
-        head_color_edge(s, stripIndexx, 255, 0, 0)
-        head_color_edge(s, stripIndexx + 5, 255, 0, 0)
-    update_all_argb(s)
+        head_color_edge(s, stripIndexx, r, g, b)
+        head_color_edge(s, stripIndexx + 5, r, g, b)
 
 
 def RandomDimStripes():
@@ -126,7 +169,19 @@ def RandomDimStripes():
         sleep(0.05)
 
 
+def Flash(s: Serial, times):
+    for i in range(0, times):
+        r, g, b = GetRandomNeonColor()
+        head_draw_all(s, r, g, b)
+        update_all_argb(s)
+        sleep(0.05)
+        head_clear_all(s)
+        update_all_argb(s)
+        sleep(0.05)
+
+
 class SongAnimation(IntEnum):
+    NONE = -1
     DRAW_ALL = 0
     DRAW_EYES = 1
     DRAW_MOUTH = 2
@@ -134,51 +189,75 @@ class SongAnimation(IntEnum):
     ROLL_EYES = 4
     ROLL_MOUTH = 5
     DIM = 6
+    ALL_RANDOM = 7
+    FLASH = 8
 
 
-def SongAnimations(s: Serial):
-    songAnimation = SongAnimation.ROLL_MOUTH
+lightIndex1 = 1
+lightIndex2 = 0
+
+
+def SongAnimations(s: Serial, song: AudioFile):
+    global lightIndex1
+    global lightIndex2
+    songAnimation = SongAnimation.NONE
     opacity = 1
-    useDimming = False
-    song = AudioFile('sound1.wav')
-    song.play()
+    useDimming = True
+    debug = False
+
     t = 0
-    try:
+
+    if True:
         max_metric = 130
         fft_values = []
-        lightIndex1 = 1
-        lightIndex2 = 0
 
-        while True:
+        # head_clear_all(s)
+
+        if not useDimming:
+            opacity = 1
+        else:
+            new_fft_values = song.get_fft()
+            smooth_fft_values(fft_values, new_fft_values, 0.8)
+            metric = sum(v for v in fft_values[0: 5])
+            opacity = metric / max_metric
+            opacity = min(1, opacity)
+
+        # print(metric)
+        if (metric > 150):
+            songAnimation = SongAnimation.ROLL_ALL
+        elif (metric > 70):
+            songAnimation = SongAnimation.DRAW_ALL
+        else:
+            songAnimation = SongAnimation.ALL_RANDOM
+        r, g, b = GetNeonColor()
+        print(songAnimation, ' ', metric)
+        if (not debug):
             head_clear_all(s)
+            if (songAnimation == SongAnimation.FLASH):
+                Flash(3)
+            elif (songAnimation == SongAnimation.DRAW_ALL):
 
-            if not useDimming:
-                opacity = 1
-            else:
-                new_fft_values = song.get_fft()
-                smooth_fft_values(fft_values, new_fft_values, 0.8)
-                metric = sum(v for v in fft_values[0: 5])
-                opacity = metric / max_metric
-                opacity = min(1, opacity)
-
-            if (songAnimation == SongAnimation.DRAW_ALL):
                 for i in range(0, len(EYE_R)):
                     head_color_edge(
-                        s, EYE_R[i], )
-                    head_color_edge(s, EYE_L[i], 255, 0, 0)
-
+                        s, EYE_R[i], r, g, b)
+                    head_color_edge(
+                        s, EYE_L[i], *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
                 for i in range(0, len(MOUTH)):
                     head_draw_some(2, 0, s, 0, 0, 0)
 
                     head_color_edge(
-                        s, MOUTH[i], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
-
+                        s, MOUTH[i],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
+                update_all_argb(s)
+            elif songAnimation == SongAnimation.ALL_RANDOM:
+                RandomStripes(s)
+                update_all_argb(s)
             elif songAnimation == SongAnimation.DRAW_EYES:
                 for i in range(0, len(EYE_R)):
                     head_color_edge(
-                        s, EYE_R[i], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                        s, EYE_R[i],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
                     head_color_edge(
-                        s, EYE_L[i], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                        s, EYE_L[i],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
+                update_all_argb(s)
             elif songAnimation == SongAnimation.DRAW_MOUTH:
                 head_draw_some(2, 0, s, 0, 0, 0)
                 for i in range(0, len(MOUTH)):
@@ -189,23 +268,24 @@ def SongAnimations(s: Serial):
                 if (lightIndex1 == len(MOUTH)):
                     lightIndex1 = 0
                 head_color_edge(
-                    s, MOUTH[lightIndex1], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    s, MOUTH[lightIndex1],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
                 lightIndex1 += 1
                 if (lightIndex2 == len(EYE_R)):
                     lightIndex2 = 0
                 head_color_edge(
-                    s, EYE_R[lightIndex2], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    s, EYE_R[lightIndex2],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
                 head_color_edge(
-                    s, EYE_L[lightIndex2], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    s, EYE_L[lightIndex2],  *hsv2rgb(rgb2hsv(r, g, b)[0], 1, opacity))
                 lightIndex2 += 1
             elif songAnimation == SongAnimation.ROLL_EYES:
                 if (lightIndex1 == len(EYE_R)):
                     lightIndex1 = 0
                 head_color_edge(
-                    s, EYE_R[lightIndex1], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    s, EYE_R[lightIndex1], r, g, b)
                 head_color_edge(
-                    s, EYE_L[lightIndex1], *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
+                    s, EYE_L[lightIndex1], r, g, b)
                 lightIndex1 += 1
+                update_all_argb(s)
             elif songAnimation == SongAnimation.ROLL_MOUTH:
                 head_draw_some(2, 0, s, 0, 0, 0)
                 if (lightIndex1 == len(MOUTH)):
@@ -213,7 +293,7 @@ def SongAnimations(s: Serial):
                 oneStep = 1
                 for step in range(1, (int)(len(allEdges[MOUTH[lightIndex1]])/oneStep)):
                     head_clear_all(s)
-                    #oneStep: int = len(allEdges[MOUTH[lightIndex1]])/5
+                    # oneStep: int = len(allEdges[MOUTH[lightIndex1]])/5
                     allEdges[MOUTH[lightIndex1]].set_range(
                         s, (int)(oneStep * step), (min)(oneStep * step + 3, len(allEdges[MOUTH[lightIndex1]])-1), *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
                     if (lightIndex1 + 1 >= len(MOUTH)):
@@ -225,11 +305,14 @@ def SongAnimations(s: Serial):
                             s, 1, (int)(oneStep * step + 3 - len(allEdges[MOUTH[lightIndex1]])+1), *hsv2rgb(rgb2hsv(255, 0, 0)[0], 1, opacity))
                     update_all_argb(s)
                 lightIndex1 += 1
+            # print('a')
             update_all_argb(s)
             # sleep(0.05)
             t += 0.05
-
+    # finally:
+     #   return
         '''
+
     # Get metric
     if use_rms:
         metric = song.get_rms()
@@ -271,9 +354,6 @@ def SongAnimations(s: Serial):
     sleep(0.04)
     t += 0.04
     '''
-
-    finally:
-        song.terminate()
 
 
 # @soc.animation
