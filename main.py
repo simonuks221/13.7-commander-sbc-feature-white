@@ -38,34 +38,30 @@ sleep(0.5)
 
 #song = AudioFile('sound2.wav')
 # song.play()
-animacIndexBuves = 0
-animacIndex = 0
 while True:
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
-
-    while (animacIndex == animacIndexBuves):
-        animacIndex = random.randint(0, 6)
-    animacIndexBuves = animacIndex
-
-    if (animacIndex == 0):
-        blinks = random.randint(1, 5)
-        blink_EYEMou(s, blinks, r, g, b)
-    elif animacIndex == 1:
+    blinks = random.randint(1, 5)
+    duration = random.random()
+    full = random.randint(0, 3)
+    print(duration)
+    blink_EYEMou(s, blinks, r, g, b)
+    if (full == 1):
         head_draw_all(s, r, g, b)
         update_all_argb(s)
-    elif animacIndex == 2:
-        duration = random.random()
+    else:
         draw_all_exc_EyeMou(s, duration, r, g, b)
-    elif animacIndex == 3:
+
+    full - random.randint(0, 4)
+    if full == 0:
         FlagsUkraine(s)
         sleep(0.1)
-    elif animacIndex == 4:
+    elif full == 1:
         FlagsLTU(s)
         sleep(0.1)
-    elif animacIndex == 5:
-        gen_rand_stripes(s, 5, r, g, b)
+
+    gen_rand_stripes(s, 5, r, g, b)
     sleep(0.1)
 
     #SongAnimations(s, song)
