@@ -14,7 +14,7 @@ from math import sqrt
 import random
 from head import *
 from joint import *
-from simonoAnimacijos import *
+#from simonoAnimacijos import *
 
 #from audio import AudioFile, AudioMic, smooth_fft_values
 # from control_socket import ControlSocket
@@ -23,8 +23,8 @@ from simonoAnimacijos import *
 
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
-#s = Serial('/dev/ttyUSB0', 460800)
-s = Serial('COM7', 460800)
+s = Serial('/dev/ttyUSB0', 460800)
+#s = Serial('COM7', 460800)
 s.timeout = 0.01
 
 
@@ -36,8 +36,8 @@ head_clear_all(s)
 update_all_argb(s)
 sleep(0.5)
 
-song = AudioFile('sound2.wav')
-song.play()
+#song = AudioFile('sound2.wav')
+# song.play()
 while True:
 
     r = random.randint(0, 255)
@@ -53,6 +53,13 @@ while True:
         update_all_argb(s)
     else:
         draw_all_exc_EyeMou(s, duration, r, g, b)
+    full = random.randint(0, 4)
+    if full == 0:
+        FlagsUkraine(s)
+        sleep(0.1)
+    elif full == 1:
+        FlagsLTU(s)
+        sleep(0.1)
 
     gen_rand_stripes(s, 5, r, g, b)
     sleep(0.1)
