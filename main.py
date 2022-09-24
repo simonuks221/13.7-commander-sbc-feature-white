@@ -1,5 +1,4 @@
 #!./venv/bin/python
-from asyncio.windows_events import NULL
 import time
 import numpy as np
 #import matplotlib.pyplot as plt
@@ -24,7 +23,6 @@ from simonoAnimacijos import *
 
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
-s = NULL
 s = Serial('/dev/ttyUSB0', 460800)
 #s = Serial('COM7', 460800)
 s.timeout = 0.01
