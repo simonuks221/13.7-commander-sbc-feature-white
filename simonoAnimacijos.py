@@ -5,14 +5,14 @@ from time import *
 from serial import Serial
 from random import randrange
 from cube import *
-from pyramid import *
-from dodecahedron import *
 from enum import IntEnum
 from time import time
 from math import sqrt
 import random
 from head import *
 from joint import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 from audio import AudioFile, AudioMic, smooth_fft_values
 
@@ -197,7 +197,7 @@ lightIndex1 = 1
 lightIndex2 = 0
 
 
-def SongAnimations(s: Serial, song: AudioFile):
+def SongAnimations(s: Serial, song: AudioFile, ln, fig, ax):
     global lightIndex1
     global lightIndex2
     songAnimation = SongAnimation.NONE
@@ -217,12 +217,28 @@ def SongAnimations(s: Serial, song: AudioFile):
             opacity = 1
         else:
             new_fft_values = song.get_fft()
-            smooth_fft_values(fft_values, new_fft_values, 0.8)
+            smooth_fft_values(fft_values, new_fft_values, 0.9)
             metric = sum(v for v in fft_values[0: 5])
             opacity = metric / max_metric
             opacity = min(1, opacity)
 
-        # print(metric)
+        xdata = np.arange(100)
+        ydata = fft_values[0:100]
+
+        ln.set_xdata(xdata)
+        ln.set_ydata(ydata)
+
+        ax.relim()
+        ax.autoscale_view()
+        ax.set_ylim([0, 300])
+
+        # Update the window
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+        print(metric)
+        return
+
+       # print(metric)
         if (metric > 150):
             songAnimation = SongAnimation.ROLL_ALL
         elif (metric > 70):
