@@ -35,7 +35,7 @@ edges_init(allPixels)
 head_draw_all(s, 0, 0, 0)
 head_clear_all(s)
 update_all_argb(s)
-sleep(0.5)
+sleep(2)
 
 # song = AudioFile('sound2.wav')
 # song.play()

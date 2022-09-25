@@ -106,7 +106,7 @@ def head_clear_all(s: Serial):
         response = set_argb(s, i, 0, 0, 1299, 0, 0, 0)
         set_argb(s, i, 1, 0, 1299, 0, 0, 0)
         if (response == response.TIMEOUT):
-            return response.TIMEOUT
+            return ResponseStatus.TIMEOUT
     return ResponseStatus.OK
 
 
