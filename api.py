@@ -363,7 +363,9 @@ def update_all_argb(s: Serial):
             send_cmd(s, i, CMD.UPDATE_ARGB)
     sleep(0.05)  # 0.05 baisiausiu atveju
     send_cmd(s, 4, CMD.UPDATE_ARGB)
-    return send_cmd(s, 2, CMD.UPDATE_ARGB)
+    send_cmd(s, 2, CMD.UPDATE_ARGB)
+    sleep(0.1)
+    return 0
     # return send_cmd(s, 255, CMD.UPDATE_ARGB)
 
 

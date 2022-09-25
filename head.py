@@ -103,8 +103,11 @@ def head_draw_some(kanalas: int, portas: int, s: Serial, r: int, g: int, b: int)
 
 def head_clear_all(s: Serial):
     for i in range(0, 7):
-        set_argb(s, i, 0, 0, 1299, 0, 0, 0)
+        response = set_argb(s, i, 0, 0, 1299, 0, 0, 0)
         set_argb(s, i, 1, 0, 1299, 0, 0, 0)
+        if (response == response.TIMEOUT):
+            return response.TIMEOUT
+    return ResponseStatus.OK
 
 
 def head_draw_all(s: Serial, r: int, g: int, b: int):
@@ -122,7 +125,7 @@ def head_draw_all(s: Serial, r: int, g: int, b: int):
     set_argb(s, 6, 1, 0, 1299, r, g, b)
 
 
-def head_init(s: Serial, allPixels: int):
+def edges_init(allPixels: int):
     curr: int = 0
     i: int = 0
 
@@ -135,6 +138,9 @@ def head_init(s: Serial, allPixels: int):
                 curr += e
                 i += 1
             curr = 0
+
+
+def head_init(s: Serial):
     '''
     for e in allPixels:
         newSegment = LEDSegment([(FBadress, FBLport, curr, curr + e), ])
