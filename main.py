@@ -24,7 +24,7 @@ from joint import *
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
 s = Serial('/dev/ttyUSB0', 460800)
-# s = Serial('COM7', 460800)
+#s = Serial('COM7', 460800)
 s.timeout = 0.01
 
 
@@ -35,13 +35,14 @@ edges_init(allPixels)
 head_draw_all(s, 0, 0, 0)
 head_clear_all(s)
 update_all_argb(s)
-sleep(2)
+sleep(0.5)
 
 # song = AudioFile('sound2.wav')
 # song.play()
 while True:
     response = head_clear_all(s)
     if (response == ResponseStatus.TIMEOUT):
+        print('ahdjasjvdas')
         head_init(s)
         head_draw_all(s, 0, 0, 0)
         head_clear_all(s)
