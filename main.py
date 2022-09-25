@@ -40,15 +40,6 @@ sleep(0.5)
 # song = AudioFile('sound2.wav')
 # song.play()
 while True:
-    response = head_clear_all(s)
-    if (response == ResponseStatus.TIMEOUT):
-        print('ahdjasjvdas')
-        head_init(s)
-        head_draw_all(s, 0, 0, 0)
-        head_clear_all(s)
-        update_all_argb(s)
-        sleep(0.5)
-
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
