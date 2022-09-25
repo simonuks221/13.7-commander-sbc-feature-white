@@ -24,7 +24,7 @@ from joint import *
 # soc = ControlSocket("My awesome installation", "http://localhost:8080")
 
 s = Serial('/dev/ttyUSB0', 460800)
-#s = Serial('COM7', 460800)
+# s = Serial('COM7', 460800)
 s.timeout = 0.01
 
 
@@ -39,33 +39,38 @@ sleep(0.5)
 
 # song = AudioFile('sound2.wav')
 # song.play()
+randomAnimationBack = 0
+randomAnimation = 0
 while True:
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
-    blinks = random.randint(1, 5)
-    duration = random.random()
-    full = random.randint(0, 3)
-    print(duration)
-    blink_EYEMou(s, blinks, r, g, b)
-    sleep(0.1)
-    if (blinks == 1):
+
+    while (randomAnimation == randomAnimationBack):
+        randomAnimation = random.randint(0, 5)
+    randomAnimationBack = randomAnimation
+
+    if randomAnimation == 0:
+        blinks = random.randint(1, 5)
+        blink_EYEMou(s, blinks, r, g, b)
+        sleep(0.1)
+    elif randomAnimation == 1:
         head_draw_all(s, r, g, b)
         update_all_argb(s)
         sleep(0.1)
-    else:
-        sleep(0.1)
+    elif randomAnimation == 2:
+        duration = random.random()
         draw_all_exc_EyeMou(s, duration, r, g, b)
         sleep(0.1)
-    full = random.randint(0, 8)
-    if full == 0:
-        FlagsUkraine(s)
+    elif randomAnimation == 3:
+        rr = random.randint(0, 6)
+        if rr == 0:
+            FlagsUkraine(s)
+            sleep(0.1)
+        elif rr == 1:
+            FlagsLTU(s)
+            sleep(0.1)
+    elif randomAnimation == 4:
+        gen_rand_stripes(s, 5, r, g, b)
         sleep(0.1)
-    elif full == 1:
-        FlagsLTU(s)
-        sleep(0.1)
-
-    gen_rand_stripes(s, 5, r, g, b)
-    sleep(0.1)
-
-    # SongAnimations(s, song)
+        # SongAnimations(s, song)
